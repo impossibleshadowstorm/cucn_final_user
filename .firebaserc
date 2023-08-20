@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "uic-notifier-50b72"
+  },
+  "targets": {
+    "uic-notifier-50b72": {
+      "hosting": {
+        "uicn": [
+          "uicn-cu"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

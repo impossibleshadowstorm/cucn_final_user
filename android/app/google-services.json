@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "628616680980",
+    "project_id": "uic-notifier-50b72",
+    "storage_bucket": "uic-notifier-50b72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628616680980:android:9cb766b0f0d18e73c67901",
+        "android_client_info": {
+          "package_name": "com.uic.notifier.uic_notifier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628616680980-m7pb48ghjqcbtmtomgcfp0m3f4v4pn9b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFBZz4OC8DMVUe-30b4PR6VEJaxGjUk3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628616680980-m7pb48ghjqcbtmtomgcfp0m3f4v4pn9b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "628616680980-eh906u7hioql0lp8gae5ie6gukdjrag3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uic.students.uicNotifierStudents.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628616680980:android:bfec074cb5aa49bcc67901",
+        "android_client_info": {
+          "package_name": "com.uic.uicn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628616680980-m7pb48ghjqcbtmtomgcfp0m3f4v4pn9b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFBZz4OC8DMVUe-30b4PR6VEJaxGjUk3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628616680980-m7pb48ghjqcbtmtomgcfp0m3f4v4pn9b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "628616680980-eh906u7hioql0lp8gae5ie6gukdjrag3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.uic.students.uicNotifierStudents.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
