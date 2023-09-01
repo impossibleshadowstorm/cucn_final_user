@@ -260,6 +260,7 @@ class _UnNotificationDetailScreenState
 
   Widget detailsTab(var data) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -406,6 +407,7 @@ class _UnNotificationDetailScreenState
 
   Widget documentsTab() {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: FutureBuilder(
           future: firebaseFireStore
               .collection(Constants.notifications)
