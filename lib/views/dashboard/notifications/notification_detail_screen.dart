@@ -1,32 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uicn/controllers/unfinalized/unfinalized_main_application_controller.dart';
 import 'package:easy_pdf_viewer/easy_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../utils/constants.dart';
+import '../../../../controllers/main_application_controller.dart';
+import '../../../../utils/constants.dart';
 
-class UnNotificationDetailScreen extends StatefulWidget {
+class NotificationDetailScreen extends StatefulWidget {
   final String notificationId;
 
-  const UnNotificationDetailScreen({
+  const NotificationDetailScreen({
     super.key,
     required this.notificationId,
   });
 
   @override
-  State<UnNotificationDetailScreen> createState() =>
-      _UnNotificationDetailScreenState();
+  State<NotificationDetailScreen> createState() =>
+      _NotificationDetailScreenState();
 }
 
-class _UnNotificationDetailScreenState
-    extends State<UnNotificationDetailScreen> {
-  final UnFinalizedMainApplicationController
-      _unFinalizedMainApplicationController = Get.find();
+class _NotificationDetailScreenState
+    extends State<NotificationDetailScreen> {
+  final MainApplicationController
+      _mainApplicationController = Get.find();
   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
 
   @override
@@ -53,6 +52,7 @@ class _UnNotificationDetailScreenState
                     child: Row(
                       children: [
                         InkWell(
+                          overlayColor: MaterialStateProperty.all(Colors.transparent),
                           onTap: () {
                             Get.back();
                           },
@@ -149,7 +149,7 @@ class _UnNotificationDetailScreenState
                               overlayColor:
                                   MaterialStateProperty.all(Colors.transparent),
                               onTap: () {
-                                _unFinalizedMainApplicationController
+                                _mainApplicationController
                                     .notificationDetailTabIdx.value = 0;
                               },
                               child: Column(
@@ -162,7 +162,7 @@ class _UnNotificationDetailScreenState
                                       style: GoogleFonts.openSans(
                                           color: Constants.primaryColor,
                                           fontSize:
-                                              _unFinalizedMainApplicationController
+                                              _mainApplicationController
                                                           .notificationDetailTabIdx
                                                           .value ==
                                                       1
@@ -173,7 +173,7 @@ class _UnNotificationDetailScreenState
                                     ),
                                   ),
                                   SizedBox(height: 1.h),
-                                  _unFinalizedMainApplicationController
+                                  _mainApplicationController
                                               .notificationDetailTabIdx.value ==
                                           0
                                       ? Container(
@@ -191,7 +191,7 @@ class _UnNotificationDetailScreenState
                               overlayColor:
                                   MaterialStateProperty.all(Colors.transparent),
                               onTap: () {
-                                _unFinalizedMainApplicationController
+                                _mainApplicationController
                                     .notificationDetailTabIdx.value = 1;
                               },
                               child: Column(
@@ -204,7 +204,7 @@ class _UnNotificationDetailScreenState
                                       style: GoogleFonts.openSans(
                                           color: Constants.primaryColor,
                                           fontSize:
-                                              _unFinalizedMainApplicationController
+                                              _mainApplicationController
                                                           .notificationDetailTabIdx
                                                           .value ==
                                                       1
@@ -215,7 +215,7 @@ class _UnNotificationDetailScreenState
                                     ),
                                   ),
                                   SizedBox(height: 1.h),
-                                  _unFinalizedMainApplicationController
+                                  _mainApplicationController
                                               .notificationDetailTabIdx.value ==
                                           1
                                       ? Container(
@@ -236,7 +236,7 @@ class _UnNotificationDetailScreenState
                     child: Obx(() {
                       return SizedBox(
                         width: 100.w,
-                        child: _unFinalizedMainApplicationController
+                        child: _mainApplicationController
                                     .notificationDetailTabIdx.value ==
                                 0
                             ? detailsTab(snapshot.data!.data()!)
@@ -331,7 +331,7 @@ class _UnNotificationDetailScreenState
                 )
               : const SizedBox(),
           SizedBox(height: 1.h),
-          // _unFinalizedMainApplicationController.links.isNotEmpty
+          // _mainApplicationController.links.isNotEmpty
           data["links"] != null && data["links"].length > 0
               ? SizedBox(
                   height: 55 * data["links"].length.toDouble() as double,
@@ -349,9 +349,9 @@ class _UnNotificationDetailScreenState
                                   MaterialStateProperty.all(Colors.transparent),
                               onTap: () {
                                 String url =
-                                    _unFinalizedMainApplicationController
+                                    _mainApplicationController
                                         .validateLink(data["links"][index]);
-                                _unFinalizedMainApplicationController
+                                _mainApplicationController
                                     .launchUrlInBrowser(url);
                               },
                               child: linkBoxTile(data["links"][index], index),
@@ -388,7 +388,7 @@ class _UnNotificationDetailScreenState
                   return SizedBox(
                     width: 100.w,
                     child: Text(
-                      "Message by ${snap.data!.data()!["name"]}, ${_unFinalizedMainApplicationController.getDesignationRole(snap.data!.data()!["role"]["position"])}, UIC",
+                      "Message by ${snap.data!.data()!["name"]}, ${_mainApplicationController.getDesignationRole(snap.data!.data()!["role"]["position"])}, UIC",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.openSans(
                         color: Colors.grey,

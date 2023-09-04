@@ -1,30 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uicn/common/functions/class%20Functions.dart';
-import 'package:uicn/controllers/unfinalized/unfinalized_main_application_controller.dart';
+import 'package:uicn/services/global.dart';
 import 'package:uicn/utils/constants.dart';
-import 'package:uicn/views/unfinalized/un_notification_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class UnFinalizedNotificationScreen extends StatefulWidget {
-  const UnFinalizedNotificationScreen({super.key});
+import '../../../../controllers/main_application_controller.dart';
+import 'notification_detail_screen.dart';
+
+class NotificationScreen extends StatefulWidget {
+  const NotificationScreen({super.key});
 
   @override
-  State<UnFinalizedNotificationScreen> createState() =>
-      _UnFinalizedNotificationScreenState();
+  State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
-class _UnFinalizedNotificationScreenState
-    extends State<UnFinalizedNotificationScreen> {
-  final UnFinalizedMainApplicationController
-      _unFinalizedMainApplicationController = Get.find();
+class _NotificationScreenState extends State<NotificationScreen> {
+  final MainApplicationController mainApplicationController = Get.find();
   FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
 
   Future<String> getDataFromAdminCollection(String docId) async {
-    final UnFinalizedMainApplicationController
-        _unFinalizedMainApplicationController = Get.find();
     try {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection(Constants.admin)
@@ -45,6 +41,23 @@ class _UnFinalizedNotificationScreenState
     }
   }
 
+  List<String> notificationCriteria = ["ALL"];
+
+  @override
+  void initState() {
+    super.initState();
+    if (Global.storageServices
+        .getString(Constants.courseCode)!
+        .startsWith("M")) {
+      notificationCriteria.add("ALL-PG");
+    } else {
+      notificationCriteria.add("ALL-UG");
+    }
+    notificationCriteria
+        .add(Global.storageServices.getString(Constants.uid)!.substring(2, 5));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,29 +74,28 @@ class _UnFinalizedNotificationScreenState
               width: 100.w,
               child: Row(
                 children: [
-                  // InkWell(
-                  //   onTap: () {
-                  //     Get.back();
-                  //   },
-                  //   child: Container(
-                  //     height: 5.h,
-                  //     width: 5.h,
-                  //     decoration: BoxDecoration(
-                  //       shape: BoxShape.circle,
-                  //       color: Colors.white,
-                  //       border: Border.all(
-                  //         color: Constants.lightGreyBorderColor,
-                  //         width: 1,
-                  //       ),
-                  //     ),
-                  //     child: const Center(
-                  //       child: Icon(
-                  //         AntDesign.arrowleft,
-                  //         color: Color(0xFF171B20),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Obx(() {
+                    return InkWell(
+                      onTap: () {
+                        if (mainApplicationController.isDrawerOpen.value) {
+                          mainApplicationController.xOffset.value = 0.0;
+                          mainApplicationController.yOffset.value = 0.0;
+                          mainApplicationController.isDrawerOpen.value = false;
+                        } else {
+                          mainApplicationController.xOffset.value = 290.0;
+                          mainApplicationController.yOffset.value = 80.0;
+                          mainApplicationController.isDrawerOpen.value = true;
+                        }
+                      },
+                      child: Icon(
+                        mainApplicationController.isDrawerOpen.value
+                            ? Icons.arrow_back_sharp
+                            : Icons.menu,
+                        color: Constants.primaryColor,
+                        size: 20.sp,
+                      ),
+                    );
+                  }),
                   Expanded(
                     child: Center(
                       child: Text(
@@ -108,15 +120,23 @@ class _UnFinalizedNotificationScreenState
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                      List filteredAndSortedDocuments = snapshot.data!.docs
+                          .where((doc) =>
+                              notificationCriteria.contains(doc['sendTo']))
+                          .toList()
+                        ..sort(
+                            (a, b) => b['timestamp'].compareTo(a['timestamp']));
+
                       return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
+                          itemCount: filteredAndSortedDocuments.length,
                           padding: EdgeInsets.zero,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             return Column(
                               children: [
                                 notificationTile(
-                                    snapshot.data!.docs[index].data(), snapshot.data!.docs[index].id),
+                                    filteredAndSortedDocuments[index],
+                                    filteredAndSortedDocuments[index].id),
                                 SizedBox(height: 2.5.w),
                               ],
                             );
@@ -152,8 +172,9 @@ class _UnFinalizedNotificationScreenState
         child: Column(
           children: [
             InkWell(
+              overlayColor: MaterialStateProperty.all(Colors.transparent),
               onTap: () {
-                Get.to(() => UnNotificationDetailScreen(
+                Get.to(() => NotificationDetailScreen(
                       notificationId: id,
                     ));
               },

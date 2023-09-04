@@ -1,14 +1,8 @@
 import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:uicn/common/functions/class%20Functions.dart';
 import 'package:uicn/services/global.dart';
 import 'package:uicn/utils/constants.dart';
-import 'package:uicn/views/app_lock/lock_animation_screen.dart';
 import 'package:uicn/views/auth/login_screen.dart';
-import 'package:uicn/views/common/error_screen.dart';
-import 'package:uicn/views/finalized/dashboard/main/main_home_screen.dart';
-import 'package:uicn/views/unfinalized/dashboard/un_main_home_screen.dart';
+import 'package:uicn/views/dashboard/main_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:get/get.dart';
@@ -47,20 +41,14 @@ class _SplashScreenState extends State<SplashScreen>
       });
     controller.animateWith(simulation);
 
-
-    // Global.storageServices.removeAllData();
     checkForScreens();
-    // () async {
-    // }();
   }
 
-  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   checkForScreens() {
-    // print(Global.storageServices.getString(Constants.uid));
     if (Global.storageServices.getString(Constants.uid) != null &&
         Global.storageServices.getString(Constants.courseCode) != null) {
-      if (Global.storageServices.getBool(Constants.finalized)) {
+      // if (Global.storageServices.getBool(Constants.finalized)) {
         Timer(
           const Duration(seconds: 3),
           () => Get.offAll(
@@ -69,68 +57,68 @@ class _SplashScreenState extends State<SplashScreen>
             curve: Curves.easeInOutQuad,
           ),
         );
-      } else {
-        Functions.checkForFinalization().then((value) async {
-          if (value == true) {
-            await _fireStore
-                .collection(Constants.students)
-                .doc(Global.storageServices.getString(Constants.uid))
-                .get()
-                .then((value) {
-              if (value.data()!["status"]) {
-                Global.storageServices.setBool(Constants.finalized, true);
-                Timer(
-                  const Duration(seconds: 3),
-                  () => Get.offAll(
-                    () => const MainHomeScreen(),
-                    transition: Transition.leftToRight,
-                    curve: Curves.easeInOutQuad,
-                  ),
-                );
-              } else {
-                Timer(
-                  const Duration(seconds: 3),
-                  () => Get.offAll(
-                    () => const LockAnimationScreen(),
-                    transition: Transition.leftToRight,
-                    curve: Curves.easeInOutQuad,
-                  ),
-                );
-              }
-            }).catchError((e) {
-              print(e.toString());
-            });
-            // Global.storageServices.setBool(Constants.finalized, true);
-            // Timer(
-            //   const Duration(seconds: 3),
-            //   () => Get.offAll(
-            //     () => const MainHomeScreen(),
-            //     transition: Transition.leftToRight,
-            //     curve: Curves.easeInOutQuad,
-            //   ),
-            // );
-          } else if (value == false) {
-            Timer(
-              const Duration(seconds: 3),
-              () => Get.offAll(
-                () => const UnFinalizedMainHomeScreen(),
-                transition: Transition.leftToRight,
-                curve: Curves.easeInOutQuad,
-              ),
-            );
-          } else {
-            Timer(
-              const Duration(seconds: 3),
-              () => Get.offAll(
-                () => const ErrorScreen(
-                    errorText: "Unable to fetch your batch details..!!"),
-                transition: Transition.leftToRight,
-                curve: Curves.easeInOutQuad,
-              ),
-            );
-          }
-        });
-      }
+      // } else {
+      //   Functions.checkForFinalization().then((value) async {
+      //     if (value == true) {
+      //       await _fireStore
+      //           .collection(Constants.students)
+      //           .doc(Global.storageServices.getString(Constants.uid))
+      //           .get()
+      //           .then((value) {
+      //         if (value.data()!["status"]) {
+      //           Global.storageServices.setBool(Constants.finalized, true);
+      //           Timer(
+      //             const Duration(seconds: 3),
+      //             () => Get.offAll(
+      //               () => const MainHomeScreen(),
+      //               transition: Transition.leftToRight,
+      //               curve: Curves.easeInOutQuad,
+      //             ),
+      //           );
+      //         } else {
+      //           Timer(
+      //             const Duration(seconds: 3),
+      //             () => Get.offAll(
+      //               () => const LockAnimationScreen(),
+      //               transition: Transition.leftToRight,
+      //               curve: Curves.easeInOutQuad,
+      //             ),
+      //           );
+      //         }
+      //       }).catchError((e) {
+      //         print(e.toString());
+      //       });
+      //       // Global.storageServices.setBool(Constants.finalized, true);
+      //       // Timer(
+      //       //   const Duration(seconds: 3),
+      //       //   () => Get.offAll(
+      //       //     () => const MainHomeScreen(),
+      //       //     transition: Transition.leftToRight,
+      //       //     curve: Curves.easeInOutQuad,
+      //       //   ),
+      //       // );
+      //     } else if (value == false) {
+      //       Timer(
+      //         const Duration(seconds: 3),
+      //         () => Get.offAll(
+      //           () => const UnFinalizedMainHomeScreen(),
+      //           transition: Transition.leftToRight,
+      //           curve: Curves.easeInOutQuad,
+      //         ),
+      //       );
+      //     } else {
+      //       Timer(
+      //         const Duration(seconds: 3),
+      //         () => Get.offAll(
+      //           () => const ErrorScreen(
+      //               errorText: "Unable to fetch your batch details..!!"),
+      //           transition: Transition.leftToRight,
+      //           curve: Curves.easeInOutQuad,
+      //         ),
+      //       );
+      //     }
+      //   });
+      // }
     } else {
       Timer(
         const Duration(seconds: 3),

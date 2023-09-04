@@ -3,15 +3,10 @@ import 'package:uicn/common/custom_toasts.dart';
 import 'package:uicn/common/functions/class%20Functions.dart';
 import 'package:uicn/controllers/authentication_controller/authentication_controller.dart';
 import 'package:uicn/services/global.dart';
-import 'package:uicn/views/app_lock/application_locked_screen.dart';
-import 'package:uicn/views/common/error_screen.dart';
-import 'package:uicn/views/finalized/dashboard/main/main_home_screen.dart';
-import 'package:uicn/views/unfinalized/dashboard/un_main_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
-import '../../common/widgets/common_button_progress_indicator.dart';
 import '../../common/form_validation/form_validation.dart';
 import '../../common/widgets/common_button.dart';
 import '../../common/widgets/common_input_field.dart';
@@ -20,6 +15,7 @@ import '../../controllers/main_application_controller.dart';
 import '../../utils/constants.dart';
 import 'package:get/get.dart';
 
+import '../dashboard/main_home_screen.dart';
 import 'final_registration/final_registration_form_screen.dart';
 
 class LoginPanel extends StatefulWidget {
@@ -34,7 +30,7 @@ class LoginPanel extends StatefulWidget {
 class _LoginPanelState extends State<LoginPanel> {
   final MainApplicationController _mainApplicationController = Get.find();
   final AuthenticationController _authenticationController =
-      Get.put(AuthenticationController());
+  Get.put(AuthenticationController());
 
   TextEditingController loginUID = TextEditingController();
   TextEditingController loginPassword = TextEditingController();
@@ -80,7 +76,8 @@ class _LoginPanelState extends State<LoginPanel> {
           ),
           SizedBox(height: 3.5.h),
           Obx(
-            () => _mainApplicationController.authIdx.value == 0
+                () =>
+            _mainApplicationController.authIdx.value == 0
                 ? loginTab()
                 : registerTab(),
           )
@@ -155,59 +152,37 @@ class _LoginPanelState extends State<LoginPanel> {
             _authenticationController.loginLoading.value
                 ? CommonButton.primaryFilledProgressButton(null, null)
                 : InkWell(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        _authenticationController
-                            .login(
-                          uid: loginUID.text.toUpperCase(),
-                          password: loginPassword.text,
-                        )
-                            .then((value) {
-                          if (value == 101) {
-                            CustomToasts.errorToast(context,
-                                "User Doesn't Exists. Please register Yourself.");
-                          } else if (value == 1) {
-                            CustomToasts.successToast(
-                                context, "Login Successful..!");
-                            Global.storageServices
-                                .setString(Constants.uid, loginUID.text.toUpperCase());
-                            Functions.checkForFinalization().then((value) async {
-                              if (value == true) {
-                                await _firestore.collection(Constants.students).doc(Global.storageServices.getString(Constants.uid)).get().then((value) {
-                                  if (value.data()!["status"]){
-                                    Global.storageServices
-                                        .setBool(Constants.finalized, true);
-                                    Get.offAll(() => const MainHomeScreen());
-                                  }
-                                  else{
-                                    Get.offAll(() => const ApplicationLockedScreen());
-                                  }
-                                }).catchError((e){
-                                  print(e.toString());
-                                });
-                              } else if (value == false) {
-                                Get.offAll(
-                                    () => const UnFinalizedMainHomeScreen());
-                              } else {
-                                Global.storageServices
-                                    .removeData(Constants.courseCode);
-                                CustomToasts.errorToast(context,
-                                    "Unable to get your batch details. Try again later.");
-                              }
-                            });
-                          } else if (value == 102) {
-                            CustomToasts.errorToast(
-                                context, "Incorrect Password or Username");
-                          } else {
-                            CustomToasts.errorToast(context,
-                                "Error Signing Up! Please Try again Later..!!");
-                          }
-                        });
-                      }
-                    },
-                    child:
-                        CommonButton.primaryFilledButton(null, null, "Login"),
-                  ),
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  _authenticationController
+                      .login(
+                    uid: loginUID.text.toUpperCase(),
+                    password: loginPassword.text,
+                  )
+                      .then((value) {
+                    if (value == 101) {
+                      CustomToasts.errorToast(context,
+                          "User Doesn't Exists. Please register Yourself.");
+                    } else if (value == 1) {
+                      CustomToasts.successToast(
+                          context, "Login Successful..!");
+                      Global.storageServices
+                          .setString(
+                          Constants.uid, loginUID.text.toUpperCase());
+                      Get.offAll(() => const MainHomeScreen());
+                    } else if (value == 102) {
+                      CustomToasts.errorToast(
+                          context, "Incorrect Password or Username");
+                    } else {
+                      CustomToasts.errorToast(context,
+                          "Error Signing Up! Please Try again Later..!!");
+                    }
+                  });
+                }
+              },
+              child:
+              CommonButton.primaryFilledButton(null, null, "Login"),
+            ),
             SizedBox(height: 5.h),
           ],
         );
@@ -243,10 +218,10 @@ class _LoginPanelState extends State<LoginPanel> {
             ),
             SizedBox(height: 2.5.h),
             CommonInputField.passwordInputField(
-              signUpConfirmPassword,
-              "Confirm Password",
-              FormValidation.passwordValidatorFunction,
-              "signup Confirm"
+                signUpConfirmPassword,
+                "Confirm Password",
+                FormValidation.passwordValidatorFunction,
+                "signup Confirm"
             ),
             SizedBox(height: 2.5.h),
             Container(
@@ -269,7 +244,7 @@ class _LoginPanelState extends State<LoginPanel> {
                         items: Constants.courseList,
                         hintText: "Course",
                         selectedValue: _authenticationController
-                                .selectedCourse.value.isEmpty
+                            .selectedCourse.value.isEmpty
                             ? null
                             : _authenticationController.selectedCourse.value,
                         onChanged: (newValue) {
@@ -340,7 +315,7 @@ class _LoginPanelState extends State<LoginPanel> {
                             horizontal: 3.w, vertical: 2.5.w),
                         decoration: BoxDecoration(
                           border:
-                              Border.all(color: Constants.lightGreyBorderColor),
+                          Border.all(color: Constants.lightGreyBorderColor),
                           borderRadius: BorderRadius.circular(1.w),
                         ),
                         child: Row(
@@ -358,10 +333,10 @@ class _LoginPanelState extends State<LoginPanel> {
                                       .generateEnrolledYearsList(),
                                   hintText: "Enrolled",
                                   selectedValue: _authenticationController
-                                          .enrolledYear.value.isEmpty
+                                      .enrolledYear.value.isEmpty
                                       ? null
                                       : _authenticationController
-                                          .enrolledYear.value,
+                                      .enrolledYear.value,
                                   onChanged: (newValue) {
                                     _authenticationController
                                         .enrolledYear.value = newValue;
@@ -399,7 +374,7 @@ class _LoginPanelState extends State<LoginPanel> {
                             horizontal: 3.w, vertical: 2.5.w),
                         decoration: BoxDecoration(
                           border:
-                              Border.all(color: Constants.lightGreyBorderColor),
+                          Border.all(color: Constants.lightGreyBorderColor),
                           borderRadius: BorderRadius.circular(1.w),
                         ),
                         child: Row(
@@ -417,10 +392,10 @@ class _LoginPanelState extends State<LoginPanel> {
                                       .generateCompletionYearsList(),
                                   hintText: "Completion",
                                   selectedValue: _authenticationController
-                                          .completionYear.value.isEmpty
+                                      .completionYear.value.isEmpty
                                       ? null
                                       : _authenticationController
-                                          .completionYear.value,
+                                      .completionYear.value,
                                   onChanged: (newValue) {
                                     _authenticationController
                                         .completionYear.value = newValue;
@@ -462,68 +437,63 @@ class _LoginPanelState extends State<LoginPanel> {
             _authenticationController.registerLoading.value
                 ? CommonButton.primaryFilledProgressButton(null, null)
                 : InkWell(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (signUpPassword.text != signUpConfirmPassword.text) {
-                          CustomToasts.errorToast(
-                              context, "Password doesn't match..");
-                        } else if(_authenticationController.selectedCourse.value == ""){
-                          CustomToasts.errorToast(
-                              context, "Course Not Selected..!!");
-                        } else if(_authenticationController.selectedGender.value == ""){
-                          CustomToasts.errorToast(
-                              context, "Gender Not Selected..!!");
-                        } else {
-                          _authenticationController
-                              .addStudentData(
-                            uid: signUpUID.text.toUpperCase(),
-                            name: signUpName.text,
-                            password: signUpPassword.text,
-                            aboutMe: signUpAboutMe.text,
-                          )
-                              .then((value) {
-                            if (value == 1) {
-                              CustomToasts.errorToast(
-                                  context, "User Already Exists");
-                            } else if (value == 2) {
-                              CustomToasts.successToast(
-                                  context, "User Registration Successful..!");
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  if (signUpPassword.text != signUpConfirmPassword.text) {
+                    CustomToasts.errorToast(
+                        context, "Password doesn't match..");
+                  } else
+                  if (_authenticationController.selectedCourse.value == "") {
+                    CustomToasts.errorToast(
+                        context, "Course Not Selected..!!");
+                  } else
+                  if (_authenticationController.selectedGender.value == "") {
+                    CustomToasts.errorToast(
+                        context, "Gender Not Selected..!!");
+                  } else {
+                    // Add Student Data to Firebase
+                    _authenticationController
+                        .addStudentData(
+                      uid: signUpUID.text.toUpperCase(),
+                      name: signUpName.text,
+                      password: signUpPassword.text,
+                      aboutMe: signUpAboutMe.text,
+                    )
+                        .then((value) {
+                      if (value == 1) {
+                        CustomToasts.errorToast(
+                            context, "User Already Exists");
+                      } else if (value == 2) {
+                        CustomToasts.successToast(
+                            context, "User Registration Successful..!");
 
-                              // Add UID, Course Code, Enrolled Year
-                              Global.storageServices
-                                  .setString(Constants.uid, signUpUID.text.toUpperCase());
-                              Global.storageServices.setString(
-                                  Constants.enrolledYear,
-                                  _authenticationController.enrolledYear.value);
-                              Global.storageServices.setString(
-                                Constants.courseCode,
-                                Functions.getCodeFromCourse(
-                                  _authenticationController
-                                      .selectedCourse.value,
-                                ),
-                              );
-                              Functions.checkForFinalization().then((value) {
-                                if (value == true) {
-                                  Get.offAll(() => const FinalRegistrationFormScreen());
-                                } else if (value == false) {
-                                  Get.offAll(
-                                      () => const UnFinalizedMainHomeScreen());
-                                } else {
-                                  CustomToasts.errorToast(context,
-                                      "Unable to get your batch details. Try again later.");
-                                }
-                              });
-                            } else {
-                              CustomToasts.errorToast(context,
-                                  "Error Signing Up! Please Try again Later..!!");
-                            }
-                          });
-                        }
+                        // Add UID, Course Code, Enrolled Year to Local Storage
+                        Global.storageServices
+                            .setString(
+                            Constants.uid, signUpUID.text.toUpperCase());
+                        Global.storageServices.setString(
+                            Constants.enrolledYear,
+                            _authenticationController.enrolledYear.value);
+                        Global.storageServices.setString(
+                          Constants.courseCode,
+                          Functions.getCodeFromCourse(
+                            _authenticationController
+                                .selectedCourse.value,
+                          ),
+                        );
+                        Get.offAll(
+                                () => const MainHomeScreen());
+                      } else {
+                        CustomToasts.errorToast(context,
+                            "Error Signing Up! Please Try again Later..!!");
                       }
-                    },
-                    child:
-                        CommonButton.primaryFilledButton(null, null, "Sign Up"),
-                  ),
+                    });
+                  }
+                }
+              },
+              child:
+              CommonButton.primaryFilledButton(null, null, "Sign Up"),
+            ),
             SizedBox(height: 5.h),
           ],
         );

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:full_screen_image/full_screen_image.dart';
-import 'package:uicn/controllers/unfinalized/unfinalized_main_application_controller.dart';
 import 'package:uicn/utils/constants.dart';
 import 'package:uicn/views/auth/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,21 +8,22 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:dio/dio.dart' as Dio;
 import 'package:get/get.dart';
 
-import '../../../services/global.dart';
-import '../un_notification_detail_screen.dart';
+import '../../../../controllers/main_application_controller.dart';
+import '../../../../services/global.dart';
+import '../notifications/notification_detail_screen.dart';
 
-class UnFinalizedProfileScreen extends StatefulWidget {
-  const UnFinalizedProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<UnFinalizedProfileScreen> createState() =>
-      _UnFinalizedProfileScreenState();
+  State<ProfileScreen> createState() =>
+      _ProfileScreenState();
 }
 
-class _UnFinalizedProfileScreenState extends State<UnFinalizedProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  final UnFinalizedMainApplicationController
-      _unFinalizedMainApplicationController = Get.find();
+  final MainApplicationController
+      _mainApplicationController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -54,30 +54,30 @@ class _UnFinalizedProfileScreenState extends State<UnFinalizedProfileScreen> {
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Positioned(
-                            top: AppBar().preferredSize.height,
-                            right: 5.w,
-                            child: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  Global.storageServices.removeAllData();
-                                  Get.offAll(() => const LoginScreen());
-                                },
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.logout_sharp,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Positioned(
+                          //   top: AppBar().preferredSize.height,
+                          //   right: 5.w,
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: 50,
+                          //     decoration: const BoxDecoration(
+                          //       color: Colors.white,
+                          //       shape: BoxShape.circle,
+                          //     ),
+                          //     child: InkWell(
+                          //       onTap: () {
+                          //         Global.storageServices.removeAllData();
+                          //         Get.offAll(() => const LoginScreen());
+                          //       },
+                          //       child: const Center(
+                          //         child: Icon(
+                          //           Icons.logout_sharp,
+                          //           color: Colors.red,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           Positioned(
                             top: 15.h - 60,
                             left: 50.w - 60,
@@ -133,7 +133,7 @@ class _UnFinalizedProfileScreenState extends State<UnFinalizedProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _unFinalizedMainApplicationController
+                                  _mainApplicationController
                                       .getCourseTag(
                                           snapshot.data!.data()!["course"]),
                                   style: GoogleFonts.openSans(
@@ -150,8 +150,7 @@ class _UnFinalizedProfileScreenState extends State<UnFinalizedProfileScreen> {
                                 ),
                                 SizedBox(width: 2.5.w),
                                 Text(
-                                  // "22MCA [Null]",
-                                  _unFinalizedMainApplicationController
+                                  _mainApplicationController
                                       .getSessionCourseTag(
                                           snapshot.data!.data()!["course"],
                                           snapshot.data!

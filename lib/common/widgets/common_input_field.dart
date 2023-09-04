@@ -46,7 +46,7 @@ class CommonInputField {
         child: TextFormField(
             controller: controller,
             validator: (value) => validator(value),
-            obscureText: showPass == "login" ? mainApplicationController.loginShow.value : showPass == "signup" ? mainApplicationController.signupShow.value : mainApplicationController.confmSignupShow.value,
+            obscureText: showPass == "login" ? mainApplicationController.loginShow.value : showPass == "signup" ? mainApplicationController.signupShow.value : mainApplicationController.confirmSignupShow.value,
             cursorColor: Constants.primaryColor,
             decoration: InputDecoration(
               labelText: labelText,
@@ -59,7 +59,7 @@ class CommonInputField {
                   else if(showPass == "signup") {
                     mainApplicationController.signupShow.value = !mainApplicationController.signupShow.value;
                   } else{
-                    mainApplicationController.confmSignupShow.value = !mainApplicationController.confmSignupShow.value;
+                    mainApplicationController.confirmSignupShow.value = !mainApplicationController.confirmSignupShow.value;
                   }
                 },
                 child: Icon(
