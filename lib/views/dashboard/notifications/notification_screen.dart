@@ -42,6 +42,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   List<String> notificationCriteria = ["ALL"];
+  List<String> notificationYearCriteria = ["ALL"];
 
   @override
   void initState() {
@@ -55,6 +56,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
     notificationCriteria
         .add(Global.storageServices.getString(Constants.uid)!.substring(2, 5));
+    notificationYearCriteria
+        .add(Global.storageServices.getString(Constants.enrolledYear)!);
+
     super.initState();
   }
 
@@ -123,6 +127,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       List filteredAndSortedDocuments = snapshot.data!.docs
                           .where((doc) =>
                               notificationCriteria.contains(doc['sendTo']))
+                          .toList()
+                          .where((element) => notificationYearCriteria
+                              .contains(element['year']))
                           .toList()
                         ..sort(
                             (a, b) => b['timestamp'].compareTo(a['timestamp']));
