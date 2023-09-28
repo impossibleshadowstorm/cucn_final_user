@@ -15,7 +15,8 @@ class FormValidation {
       return 'Invalid UID';
     }
 
-    if (!['MCA', 'MCC', 'MCI', 'BCA'].contains(value.substring(2, 5).toString().toUpperCase())) {
+    if (!['MCA', 'MCC', 'MCI', 'BCA', 'BCU', 'BSC']
+        .contains(value.substring(2, 5).toString().toUpperCase())) {
       return 'Invalid UID';
     }
 

@@ -30,7 +30,7 @@ class LoginPanel extends StatefulWidget {
 class _LoginPanelState extends State<LoginPanel> {
   final MainApplicationController _mainApplicationController = Get.find();
   final AuthenticationController _authenticationController =
-  Get.put(AuthenticationController());
+      Get.put(AuthenticationController());
 
   TextEditingController loginUID = TextEditingController();
   TextEditingController loginPassword = TextEditingController();
@@ -76,8 +76,7 @@ class _LoginPanelState extends State<LoginPanel> {
           ),
           SizedBox(height: 3.5.h),
           Obx(
-                () =>
-            _mainApplicationController.authIdx.value == 0
+            () => _mainApplicationController.authIdx.value == 0
                 ? loginTab()
                 : registerTab(),
           )
@@ -152,37 +151,39 @@ class _LoginPanelState extends State<LoginPanel> {
             _authenticationController.loginLoading.value
                 ? CommonButton.primaryFilledProgressButton(null, null)
                 : InkWell(
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  _authenticationController
-                      .login(
-                    uid: loginUID.text.toUpperCase(),
-                    password: loginPassword.text,
-                  )
-                      .then((value) {
-                    if (value == 101) {
-                      CustomToasts.errorToast(context,
-                          "User Doesn't Exists. Please register Yourself.");
-                    } else if (value == 1) {
-                      CustomToasts.successToast(
-                          context, "Login Successful..!");
-                      Global.storageServices
-                          .setString(
-                          Constants.uid, loginUID.text.toUpperCase());
-                      Get.offAll(() => const MainHomeScreen());
-                    } else if (value == 102) {
-                      CustomToasts.errorToast(
-                          context, "Incorrect Password or Username");
-                    } else {
-                      CustomToasts.errorToast(context,
-                          "Error Signing Up! Please Try again Later..!!");
-                    }
-                  });
-                }
-              },
-              child:
-              CommonButton.primaryFilledButton(null, null, "Login"),
-            ),
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        _authenticationController
+                            .login(
+                          uid: loginUID.text
+                              .toUpperCase()
+                              .trimLeft()
+                              .trimRight(),
+                          password: loginPassword.text,
+                        )
+                            .then((value) {
+                          if (value == 101) {
+                            CustomToasts.errorToast(context,
+                                "User Doesn't Exists. Please register Yourself.");
+                          } else if (value == 1) {
+                            CustomToasts.successToast(
+                                context, "Login Successful..!");
+                            Global.storageServices.setString(
+                                Constants.uid, loginUID.text.toUpperCase());
+                            Get.offAll(() => const MainHomeScreen());
+                          } else if (value == 102) {
+                            CustomToasts.errorToast(
+                                context, "Incorrect Password or Username");
+                          } else {
+                            CustomToasts.errorToast(context,
+                                "Error Signing Up! Please Try again Later..!!");
+                          }
+                        });
+                      }
+                    },
+                    child:
+                        CommonButton.primaryFilledButton(null, null, "Login"),
+                  ),
             SizedBox(height: 5.h),
           ],
         );
@@ -221,8 +222,7 @@ class _LoginPanelState extends State<LoginPanel> {
                 signUpConfirmPassword,
                 "Confirm Password",
                 FormValidation.passwordValidatorFunction,
-                "signup Confirm"
-            ),
+                "signup Confirm"),
             SizedBox(height: 2.5.h),
             Container(
               width: 100.w,
@@ -244,7 +244,7 @@ class _LoginPanelState extends State<LoginPanel> {
                         items: Constants.courseList,
                         hintText: "Course",
                         selectedValue: _authenticationController
-                            .selectedCourse.value.isEmpty
+                                .selectedCourse.value.isEmpty
                             ? null
                             : _authenticationController.selectedCourse.value,
                         onChanged: (newValue) {
@@ -278,7 +278,7 @@ class _LoginPanelState extends State<LoginPanel> {
                         items: Constants.genderList,
                         hintText: "Gender",
                         selectedValue: _authenticationController
-                            .selectedGender.value.isEmpty
+                                .selectedGender.value.isEmpty
                             ? null
                             : _authenticationController.selectedGender.value,
                         onChanged: (newValue) {
@@ -315,7 +315,7 @@ class _LoginPanelState extends State<LoginPanel> {
                             horizontal: 3.w, vertical: 2.5.w),
                         decoration: BoxDecoration(
                           border:
-                          Border.all(color: Constants.lightGreyBorderColor),
+                              Border.all(color: Constants.lightGreyBorderColor),
                           borderRadius: BorderRadius.circular(1.w),
                         ),
                         child: Row(
@@ -333,10 +333,10 @@ class _LoginPanelState extends State<LoginPanel> {
                                       .generateEnrolledYearsList(),
                                   hintText: "Enrolled",
                                   selectedValue: _authenticationController
-                                      .enrolledYear.value.isEmpty
+                                          .enrolledYear.value.isEmpty
                                       ? null
                                       : _authenticationController
-                                      .enrolledYear.value,
+                                          .enrolledYear.value,
                                   onChanged: (newValue) {
                                     _authenticationController
                                         .enrolledYear.value = newValue;
@@ -374,7 +374,7 @@ class _LoginPanelState extends State<LoginPanel> {
                             horizontal: 3.w, vertical: 2.5.w),
                         decoration: BoxDecoration(
                           border:
-                          Border.all(color: Constants.lightGreyBorderColor),
+                              Border.all(color: Constants.lightGreyBorderColor),
                           borderRadius: BorderRadius.circular(1.w),
                         ),
                         child: Row(
@@ -392,10 +392,10 @@ class _LoginPanelState extends State<LoginPanel> {
                                       .generateCompletionYearsList(),
                                   hintText: "Completion",
                                   selectedValue: _authenticationController
-                                      .completionYear.value.isEmpty
+                                          .completionYear.value.isEmpty
                                       ? null
                                       : _authenticationController
-                                      .completionYear.value,
+                                          .completionYear.value,
                                   onChanged: (newValue) {
                                     _authenticationController
                                         .completionYear.value = newValue;
@@ -437,63 +437,63 @@ class _LoginPanelState extends State<LoginPanel> {
             _authenticationController.registerLoading.value
                 ? CommonButton.primaryFilledProgressButton(null, null)
                 : InkWell(
-              onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  if (signUpPassword.text != signUpConfirmPassword.text) {
-                    CustomToasts.errorToast(
-                        context, "Password doesn't match..");
-                  } else
-                  if (_authenticationController.selectedCourse.value == "") {
-                    CustomToasts.errorToast(
-                        context, "Course Not Selected..!!");
-                  } else
-                  if (_authenticationController.selectedGender.value == "") {
-                    CustomToasts.errorToast(
-                        context, "Gender Not Selected..!!");
-                  } else {
-                    // Add Student Data to Firebase
-                    _authenticationController
-                        .addStudentData(
-                      uid: signUpUID.text.toUpperCase(),
-                      name: signUpName.text,
-                      password: signUpPassword.text,
-                      aboutMe: signUpAboutMe.text,
-                    )
-                        .then((value) {
-                      if (value == 1) {
-                        CustomToasts.errorToast(
-                            context, "User Already Exists");
-                      } else if (value == 2) {
-                        CustomToasts.successToast(
-                            context, "User Registration Successful..!");
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        if (signUpPassword.text != signUpConfirmPassword.text) {
+                          CustomToasts.errorToast(
+                              context, "Password doesn't match..");
+                        } else if (_authenticationController
+                                .selectedCourse.value ==
+                            "") {
+                          CustomToasts.errorToast(
+                              context, "Course Not Selected..!!");
+                        } else if (_authenticationController
+                                .selectedGender.value ==
+                            "") {
+                          CustomToasts.errorToast(
+                              context, "Gender Not Selected..!!");
+                        } else {
+                          // Add Student Data to Firebase
+                          _authenticationController
+                              .addStudentData(
+                            uid: signUpUID.text.toUpperCase().trim(),
+                            name: signUpName.text,
+                            password: signUpPassword.text,
+                            aboutMe: signUpAboutMe.text,
+                          )
+                              .then((value) {
+                            if (value == 1) {
+                              CustomToasts.errorToast(
+                                  context, "User Already Exists");
+                            } else if (value == 2) {
+                              CustomToasts.successToast(
+                                  context, "User Registration Successful..!");
 
-                        // Add UID, Course Code, Enrolled Year to Local Storage
-                        Global.storageServices
-                            .setString(
-                            Constants.uid, signUpUID.text.toUpperCase());
-                        Global.storageServices.setString(
-                            Constants.enrolledYear,
-                            _authenticationController.enrolledYear.value);
-                        Global.storageServices.setString(
-                          Constants.courseCode,
-                          Functions.getCodeFromCourse(
-                            _authenticationController
-                                .selectedCourse.value,
-                          ),
-                        );
-                        Get.offAll(
-                                () => const MainHomeScreen());
-                      } else {
-                        CustomToasts.errorToast(context,
-                            "Error Signing Up! Please Try again Later..!!");
+                              // Add UID, Course Code, Enrolled Year to Local Storage
+                              Global.storageServices.setString(
+                                  Constants.uid, signUpUID.text.toUpperCase());
+                              Global.storageServices.setString(
+                                  Constants.enrolledYear,
+                                  _authenticationController.enrolledYear.value);
+                              Global.storageServices.setString(
+                                Constants.courseCode,
+                                Functions.getCodeFromCourse(
+                                  _authenticationController
+                                      .selectedCourse.value,
+                                ),
+                              );
+                              Get.offAll(() => const MainHomeScreen());
+                            } else {
+                              CustomToasts.errorToast(context,
+                                  "Error Signing Up! Please Try again Later..!!");
+                            }
+                          });
+                        }
                       }
-                    });
-                  }
-                }
-              },
-              child:
-              CommonButton.primaryFilledButton(null, null, "Sign Up"),
-            ),
+                    },
+                    child:
+                        CommonButton.primaryFilledButton(null, null, "Sign Up"),
+                  ),
             SizedBox(height: 5.h),
           ],
         );
